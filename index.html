@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./index.css" />
+    <script type="module" src="./script/index.js"></script>
+    <title>Тестовое задание</title>
+  </head>
+  <body>
+    <main class="main">
+      <div class="table-container">
+        <div class="table-wrapper">
+          <table class="main-table">
+            <thead class="table-thead">
+              <tr class="table-heading">
+                <th class="heading_cell firstName-column" id="firstName" data-column="0">
+                  firstName
+                </th>
+                <th class="heading_cell lastName-column" id="lastName" data-column="1">
+                  lastName
+                </th>
+                <th class="heading_cell about-column" id="about" data-column="2">about</th>
+                <th class="heading_cell eyeColor-column" id="eyeColor" data-column="3">
+                  eyeColor
+                </th>
+              </tr>
+              <tr class="table-hid">
+                <th class="cell-hidden"  data-column="firstName-column">
+                  скрыть
+                </th>
+                <th class="cell-hidden"  data-column="lastName-column">
+                  скрыть
+                </th>
+                <th class="cell-hidden"  data-column="about-column">
+                  скрыть
+                </th>
+                <th class="cell-hidden"  data-column="eyeColor-column">
+                  скрыть
+                </th>
+              </tr>
+            </thead>
+            <tbody class="table-body"></tbody>
+          </table>
+        </div>
+        <div class="show-tabs"></div>
+        <div class="edit-wrapper">
+          <table class="edit-table">
+            <thead class="table-thead">
+              <tr class="table-heading"></tr>
+              <tr class="table-heading"></tr> 
+            </thead>
+            <tbody class="edit-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
+
