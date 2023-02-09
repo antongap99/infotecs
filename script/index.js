@@ -1,14 +1,16 @@
-import { createController } from "./createController.js";
+import { renderController } from "./renderController.js";
 import { sortController } from "./sortController.js";
-import { showColumnController } from "./showColomn.js";
+import { columnController } from "./columnController.js";
+import { tabsController } from "./partialsController.js";
 
 const init = async () => {
   const tbody = document.querySelector('.table-body')
-  const thead = document.querySelector('.table-thead')
-
-  const {table, editTable} = await createController(tbody, thead);
+  const thead = document.querySelector('.table-thead');
+  const tbodyEdit = document.querySelector(".edit-body");
+  const {table, editTable, data} = await renderController(tbody, tbodyEdit);
   sortController(thead, table, editTable);
-  showColumnController(tbody, thead)
+  columnController(tbody, thead);
+  tabsController(tbody, thead, data, table, editTable);
 }
 
 init();

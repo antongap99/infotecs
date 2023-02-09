@@ -1,6 +1,7 @@
-export const showColumnController = (tbody , thead) => {
+import { createShowTab } from "./create.js";
+
+export const columnController = (tbody , thead) => {
   const cells = document.querySelector(".table-hid");
-  const rows = Array.from(tbody.children);
   const headRows = Array.from(thead.children);
   const tabWapper = document.querySelector('.show-tabs');
 
@@ -30,28 +31,27 @@ export const showColumnController = (tbody , thead) => {
       headRows.forEach((row) => {
         addHid(row, column);
       });
-      tabWapper.append(createShowTab(column));
+
+      const tab = createShowTab(column, tbody, headRows)
+
+      tab.addEventListener('click', e => {
+        const rows = Array.from(tbody.children);
+        rows.forEach(row => {
+          removeHid(row, tab.dataset.column);
+        })
+        headRows.forEach((row) => {
+          removeHid(row, tab.dataset.column);
+        });
+        e.target.remove();
+      })
+      tabWapper.append(tab);
     }
   });
 
 
-  const createShowTab = (text) => {
-    const tab = document.createElement('button');
-    tab.textContent = `Показать ${text}`;
-    tab.classList.add('show-tab');
-    tab.dataset.column = text;
-    tab.addEventListener('click', e => {
-      const rows = Array.from(tbody.children);
-      rows.forEach(row => {
-        removeHid(row, tab.dataset.column);
-      })
-      headRows.forEach((row) => {
-        removeHid(row, tab.dataset.column);
-      });
-      e.target.remove();
-    })
-    return tab;
-  }
 
 
 };
+
+// showColumnController отвечает за скрытие и показ колонок таблицы
+// также создает таб, по которому осуществляется открытие колонки

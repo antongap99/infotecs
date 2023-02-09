@@ -2,75 +2,23 @@ import { Edit } from "../model/edit.js";
 import Data from "../model/model.js";
 import { Table } from "../model/table.js";
 import { PART } from "./const.js";
+import {
+  createClose,
+  createForm,
+  createFormWrapper,
+  createOverlay,
+} from "./create.js";
 
-export const createController = async (tbody, thead) => {
+export const renderController = async (tbody, tbodyEdit) => {
   const data = await Data.getPart(PART);
   const table = new Table(tbody, data[0]);
-  const headRows = Array.from(thead.children[1].children);
-  const tbodyEdit = document.querySelector(".edit-body");
   const editTable = new Edit(tbodyEdit, data[0]);
+  const overlay = createOverlay("overlay");
   const editWrapper = document.querySelector(".edit-wrapper");
-  const overlay = document.createElement("div");
   const rows = Array.from(tbody.children);
-
+  
   table.render();
   editTable.render();
-
-  const createTab = () => {
-    const tab = document.createElement("button");
-    tab.classList.add(`tab`);
-    tab.textContent = `Показать следующие`;
-    tab.dataset.count = 2;
-
-    return tab;
-  };
-
-  const tabsController = (data) => {
-    const tab = createTab(data.length, PART);
-
-    tbody.before(tab);
-    tab.addEventListener("click", (e) => {
-      if (+e.target.dataset.count > data.length) {
-        e.target.dataset.count = 1;
-        e.target.dataset.prev = 0;
-      }
-      if (!e.target.dataset.prev) e.target.dataset.prev = 1;
-      const rowsData = data.slice(
-        +e.target.dataset.prev,
-        +e.target.dataset.count
-      );
-
-      table.deleteRows();
-      editTable.deleteRows();
-      editTable.render(rowsData.flat(1));
-      table.render(rowsData.flat(1));
-
-      const headCells = headRows.filter((cell) =>
-        cell.classList.contains("hid")
-      );
-
-      if (headCells || headCells.length) {
-        const rows = Array.from(tbody.children);
-        const columns = [];
-        for (const headCell of headCells) {
-          columns.push(headCell.dataset.column);
-        }
-        columns.forEach((column) => {
-          rows.forEach((row) => {
-            const cell = [...row.children].find((cell) =>
-              cell.classList.contains(`${column}`)
-            );
-            cell.classList.add("hid");
-          });
-        });
-      }
-
-      e.target.dataset.prev = Number(e.target.dataset.prev) + 1;
-      e.target.dataset.count = +e.target.dataset.count + 1;
-    });
-  };
-
-  tabsController(data);
 
   const removeOverlay = () => {
     overlay.remove();
@@ -81,16 +29,9 @@ export const createController = async (tbody, thead) => {
 
   const formOpen = async (id, overlay) => {
     const data = await Data.getFormatItem(id);
-    const form = document.createElement("form");
-    form.className = "edit-form";
-    const formWapper = document.createElement("div");
-    formWapper.className = "form-wrapper";
-    const closeBtn = document.createElement("img");
-    closeBtn.classList.add("close");
-    rows.forEach((row) => {
-      if (row.dataset.id === id) row.classList.add("active");
-    });
-    overlay.classList.add("overlay");
+    const form = createForm("edit-form", editTable.createForm(data));
+    const formWapper = createFormWrapper("form-wrapper");
+    const closeBtn = createClose("close");
     const prevData = {
       firstName: null,
       lastName: null,
@@ -100,7 +41,9 @@ export const createController = async (tbody, thead) => {
       edited: false,
     };
 
-    form.insertAdjacentHTML("afterbegin", editTable.createForm(data));
+    rows.forEach((row) => {
+      if (row.dataset.id === id) row.classList.add("active");
+    });
 
     form.addEventListener("reset", (e) => {
       e.preventDefault();
@@ -187,5 +130,6 @@ export const createController = async (tbody, thead) => {
   return {
     table,
     editTable,
+    data,
   };
 };
